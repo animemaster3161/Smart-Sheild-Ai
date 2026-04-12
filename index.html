@@ -1,0 +1,1198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>SmartShield — Final Preview v4.3</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800&family=JetBrains+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#060a12;--s1:#0b1220;--s2:#0f1828;
+  --cyan:#00c8f0;--green:#00d97e;--red:#ff1530;--amber:#f59e0b;--blue:#448aff;
+  --text:#c8d3e0;--m:#6b7a8d;--b:rgba(255,255,255,0.06);--b2:rgba(255,255,255,0.1);
+  --muted:#3a4558;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;overflow-x:hidden;}
+
+body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background-image:linear-gradient(rgba(0,200,240,0.018) 1px,transparent 1px),
+  linear-gradient(90deg,rgba(0,200,240,0.018) 1px,transparent 1px);
+  background-size:44px 44px;}
+
+.scan{position:fixed;inset:0;pointer-events:none;z-index:1;
+  background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,0,0,0.06) 3px,rgba(0,0,0,0.06) 4px);}
+
+.page{position:relative;z-index:2;}
+
+/* ══ NAV ══ */
+nav{
+  position:sticky;top:0;z-index:100;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 36px;
+  background:rgba(6,10,18,0.94);
+  border-bottom:1px solid var(--b);
+  backdrop-filter:blur(16px);
+}
+nav::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,var(--cyan),transparent);opacity:.3;}
+.logo{display:flex;align-items:center;gap:10px;}
+.logo-txt{font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:800;color:#fff;letter-spacing:1px;}
+.logo-txt span{color:var(--cyan);}
+.nav-links{display:flex;gap:4px;}
+.nav-link{
+  font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:1.5px;
+  color:var(--m);padding:6px 14px;border-radius:6px;cursor:pointer;
+  border:1px solid transparent;transition:all .2s;
+}
+.nav-link:hover,.nav-link.active{color:var(--cyan);border-color:rgba(0,200,240,0.2);background:rgba(0,200,240,0.05);}
+.ver-badge{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--muted);
+  background:rgba(255,255,255,0.04);border:1px solid var(--b);padding:3px 10px;border-radius:99px;}
+.nav-cta{
+  font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;letter-spacing:1px;
+  background:var(--cyan);color:#000;padding:8px 20px;border-radius:7px;
+  text-decoration:none;transition:opacity .2s;white-space:nowrap;
+}
+.nav-cta:hover{opacity:.85;}
+
+/* ══ HERO ══ */
+.hero{
+  padding:90px 36px 80px;text-align:center;position:relative;overflow:hidden;
+  background:radial-gradient(ellipse 90% 70% at 50% 0%,rgba(0,200,240,0.08),transparent 60%);
+  border-bottom:1px solid var(--b);
+}
+.hero::after{content:'';position:absolute;bottom:0;left:50%;transform:translateX(-50%);
+  width:300px;height:1px;background:linear-gradient(90deg,transparent,var(--cyan),transparent);opacity:.4;}
+.hero-eyebrow{
+  display:inline-flex;align-items:center;gap:8px;
+  background:rgba(0,200,240,0.06);border:1px solid rgba(0,200,240,0.2);
+  border-radius:99px;padding:6px 18px;margin-bottom:28px;
+  font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--cyan);letter-spacing:2px;}
+.e-dot{width:6px;height:6px;border-radius:50%;background:var(--cyan);
+  box-shadow:0 0 8px var(--cyan);animation:ep 1.5s ease-in-out infinite;}
+@keyframes ep{0%,100%{opacity:1;}50%{opacity:0.3;}}
+h1{font-family:'Barlow Condensed',sans-serif;font-size:clamp(42px,6vw,82px);font-weight:800;
+  color:#fff;line-height:.96;letter-spacing:-2px;margin-bottom:20px;}
+h1 span{color:var(--cyan);}
+h1 .dim{color:rgba(255,255,255,0.35);}
+.hero-sub{font-size:16px;color:var(--m);max-width:600px;margin:0 auto 36px;line-height:1.7;}
+.hero-sub strong{color:var(--text);}
+.hero-ctas{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:48px;}
+.btn-primary{
+  display:inline-flex;align-items:center;gap:9px;
+  background:var(--cyan);color:#000;
+  font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:700;letter-spacing:.5px;
+  padding:13px 28px;border-radius:8px;text-decoration:none;transition:all .2s;
+  box-shadow:0 0 24px rgba(0,200,240,0.25);
+}
+.btn-primary:hover{opacity:.88;transform:translateY(-1px);}
+.btn-secondary{
+  display:inline-flex;align-items:center;gap:9px;
+  background:transparent;color:#fff;
+  font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:700;letter-spacing:.5px;
+  padding:13px 28px;border-radius:8px;text-decoration:none;
+  border:1px solid rgba(255,255,255,0.14);transition:all .2s;
+}
+.btn-secondary:hover{border-color:rgba(255,255,255,0.3);background:rgba(255,255,255,0.03);transform:translateY(-1px);}
+.tag-row{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin-bottom:0;}
+.tag{background:rgba(255,255,255,0.03);border:1px solid var(--b);
+  border-radius:6px;padding:5px 12px;font-size:11px;color:#94a3b8;font-family:'JetBrains Mono',monospace;letter-spacing:.5px;}
+
+/* ══ STATS BAR ══ */
+.stats-bar{
+  display:flex;justify-content:center;gap:0;flex-wrap:wrap;
+  border-bottom:1px solid var(--b);background:var(--s1);
+}
+.stat-item{
+  display:flex;flex-direction:column;align-items:center;
+  padding:24px 48px;border-right:1px solid var(--b);
+  flex:1;min-width:140px;
+}
+.stat-item:last-child{border-right:none;}
+.stat-num{font-family:'Barlow Condensed',sans-serif;font-size:36px;font-weight:800;line-height:1;}
+.stat-num.c{color:var(--cyan);}
+.stat-num.g{color:var(--green);}
+.stat-num.r{color:var(--red);}
+.stat-num.a{color:var(--amber);}
+.stat-lbl{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:2px;color:var(--muted);margin-top:5px;}
+
+/* ══ HOW IT WORKS ══ */
+.hiw-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;margin-top:40px;}
+@media(max-width:768px){.hiw-grid{grid-template-columns:1fr;}}
+.hiw-card{
+  background:var(--s1);border:1px solid var(--b);padding:32px 28px;position:relative;overflow:hidden;
+  transition:border-color .2s;
+}
+.hiw-card:hover{border-color:rgba(0,200,240,0.2);}
+.hiw-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;}
+.hiw-card:nth-child(1)::before{background:linear-gradient(90deg,var(--cyan),transparent);}
+.hiw-card:nth-child(2)::before{background:linear-gradient(90deg,var(--green),transparent);}
+.hiw-card:nth-child(3)::before{background:linear-gradient(90deg,var(--amber),transparent);}
+.hiw-num{
+  font-family:'Barlow Condensed',sans-serif;font-size:64px;font-weight:800;
+  line-height:1;margin-bottom:14px;opacity:.08;
+  position:absolute;right:20px;top:16px;
+}
+.hiw-icon{font-size:28px;margin-bottom:14px;}
+.hiw-title{font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:700;color:#fff;
+  letter-spacing:.3px;margin-bottom:8px;}
+.hiw-desc{font-size:12px;color:var(--m);line-height:1.7;}
+.hiw-badge{display:inline-block;margin-top:14px;font-family:'JetBrains Mono',monospace;
+  font-size:9px;letter-spacing:1.5px;padding:3px 10px;border-radius:4px;}
+.hiw-badge.c{background:rgba(0,200,240,0.07);color:var(--cyan);border:1px solid rgba(0,200,240,0.18);}
+.hiw-badge.g{background:rgba(0,217,126,0.07);color:var(--green);border:1px solid rgba(0,217,126,0.18);}
+.hiw-badge.a{background:rgba(245,158,11,0.07);color:var(--amber);border:1px solid rgba(245,158,11,0.18);}
+
+/* ══ FEATURES LANDING ══ */
+.lp-features{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1px;
+  border:1px solid var(--b);border-radius:12px;overflow:hidden;margin-top:40px;}
+.lp-feat{
+  background:var(--s1);padding:28px 24px;position:relative;overflow:hidden;
+  transition:background .2s;
+}
+.lp-feat:hover{background:var(--s2);}
+.lp-feat-icon{
+  width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;
+  font-size:20px;margin-bottom:16px;border:1px solid var(--b);background:var(--s2);
+}
+.lp-feat-title{font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:700;color:#fff;
+  letter-spacing:.3px;margin-bottom:7px;}
+.lp-feat-desc{font-size:12px;color:var(--m);line-height:1.65;}
+.lp-feat-tag{display:inline-block;margin-top:12px;font-family:'JetBrains Mono',monospace;
+  font-size:9px;letter-spacing:1px;padding:2px 8px;border-radius:4px;}
+
+/* ══ PREVIEW INTRO BANNER ══ */
+.preview-banner{
+  background:linear-gradient(135deg,rgba(0,200,240,0.04),rgba(0,217,126,0.03));
+  border:1px solid rgba(0,200,240,0.1);border-radius:12px;
+  padding:28px 32px;display:flex;align-items:center;justify-content:space-between;
+  flex-wrap:wrap;gap:16px;margin-bottom:48px;
+}
+.pb-left{}
+.pb-title{font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:700;color:#fff;}
+.pb-sub{font-size:12px;color:var(--m);margin-top:4px;}
+.pb-tags{display:flex;gap:8px;flex-wrap:wrap;}
+.pb-tag{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:1px;
+  padding:4px 12px;border-radius:4px;background:rgba(0,200,240,0.06);
+  color:var(--cyan);border:1px solid rgba(0,200,240,0.15);}
+
+/* Architecture flow */
+.arch-flow{
+  display:flex;align-items:center;justify-content:center;gap:0;flex-wrap:wrap;
+  max-width:580px;margin:0 auto;
+}
+.arch-node{
+  background:var(--s2);border:1px solid var(--b);border-radius:6px;
+  padding:6px 11px;font-family:'JetBrains Mono',monospace;font-size:9px;
+  color:var(--text);letter-spacing:.8px;text-align:center;
+}
+.arch-node.highlight{border-color:rgba(0,200,240,0.3);color:var(--cyan);background:rgba(0,200,240,0.05);}
+.arch-arrow{color:var(--m);font-size:14px;padding:0 4px;line-height:1;}
+
+/* ══ SECTION ══ */
+.section{padding:72px 36px;border-bottom:1px solid var(--b);max-width:1280px;margin:0 auto;}
+.sec-eyebrow{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:3px;
+  color:var(--cyan);text-transform:uppercase;margin-bottom:6px;}
+.sec-title{font-family:'Barlow Condensed',sans-serif;font-size:32px;font-weight:800;color:#fff;
+  margin-bottom:8px;letter-spacing:0;}
+.sec-desc{font-size:13px;color:var(--m);line-height:1.7;margin-bottom:40px;max-width:560px;}
+
+/* ══ POPUP MOCKUP ══ */
+.popups-row{display:flex;gap:32px;flex-wrap:wrap;align-items:flex-start;}
+.popup-wrap{flex:1;min-width:300px;max-width:340px;}
+.popup-label{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:2px;
+  color:var(--m);text-align:center;margin-bottom:10px;}
+.popup-frame{
+  border-radius:12px;overflow:hidden;
+  border:1px solid rgba(255,255,255,0.09);
+  box-shadow:0 20px 50px rgba(0,0,0,0.6);
+  background:var(--bg);
+}
+
+/* ——— POPUP INTERNALS (v4.3) ——— */
+.p-head{background:var(--s1);border-bottom:1px solid var(--b);
+  padding:13px 16px 12px;display:flex;align-items:center;justify-content:space-between;
+  position:relative;overflow:hidden;}
+.p-head::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,var(--cyan),transparent);opacity:.3;}
+.p-logo-row{display:flex;align-items:center;gap:10px;}
+
+/* Ring wrap for popup logo */
+.p-ring-wrap{position:relative;width:34px;height:34px;flex-shrink:0;}
+.p-ring-svg{position:absolute;inset:-4px;width:calc(100% + 8px);height:calc(100% + 8px);}
+.p-ring-circle{fill:none;stroke-width:2;stroke-linecap:round;
+  stroke-dasharray:125.66;stroke-dashoffset:0;
+  transform-origin:center;transform:rotate(-90deg);}
+.p-ring-safe .p-ring-circle{stroke:var(--green);}
+.p-ring-danger .p-ring-circle{stroke:var(--red);animation:ringPulse 1s ease-in-out infinite;}
+.p-ring-warn .p-ring-circle{stroke:var(--amber);stroke-dashoffset:30;}
+.p-ring-offline .p-ring-circle{stroke:var(--amber);stroke-dashoffset:94;}
+@keyframes ringPulse{0%,100%{opacity:.7;}50%{opacity:1;}}
+
+.p-logo-t{font-family:'Barlow Condensed',sans-serif;font-size:19px;font-weight:800;color:#fff;}
+.p-logo-t span{color:var(--cyan);}
+.p-ver{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--muted);
+  background:rgba(255,255,255,0.04);border:1px solid var(--b);padding:3px 9px;border-radius:99px;}
+
+.p-card{margin:10px 10px 7px;border-radius:10px;border:1px solid var(--b);padding:15px 14px;position:relative;overflow:hidden;}
+.p-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;border-radius:10px 10px 0 0;}
+.p-card.safe{background:rgba(0,217,126,0.04);border-color:rgba(0,217,126,0.22);}
+.p-card.safe::before{background:var(--green);box-shadow:0 0 10px rgba(0,217,126,0.4);}
+.p-card.danger{background:rgba(255,21,48,0.06);border-color:rgba(255,21,48,0.28);}
+.p-card.danger::before{background:var(--red);box-shadow:0 0 10px rgba(255,21,48,0.4);}
+.p-card.http{background:rgba(245,158,11,0.04);border-color:rgba(245,158,11,0.22);}
+.p-card.http::before{background:var(--amber);box-shadow:0 0 10px rgba(245,158,11,0.3);}
+.p-card.offline{background:rgba(245,158,11,0.04);border-color:rgba(245,158,11,0.18);}
+.p-card.offline::before{background:var(--amber);}
+
+.p-sh{display:flex;align-items:center;gap:9px;margin-bottom:7px;}
+.pdot{width:9px;height:9px;border-radius:50%;flex-shrink:0;}
+.pdot.g{background:var(--green);box-shadow:0 0 8px var(--green);animation:pg 2s infinite;}
+.pdot.r{background:var(--red);box-shadow:0 0 8px var(--red);animation:pr 1s infinite;}
+.pdot.a{background:var(--amber);box-shadow:0 0 6px var(--amber);}
+.pdot.loading{background:var(--cyan);animation:blink 1.2s linear infinite;}
+@keyframes pg{0%,100%{opacity:1;}50%{opacity:0.5;}}
+@keyframes pr{0%,100%{opacity:1;}50%{opacity:0.5;}}
+@keyframes blink{0%,100%{opacity:.3;}50%{opacity:1;}}
+.p-lbl{font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:700;}
+.p-lbl.g{color:var(--green);}
+.p-lbl.r{color:var(--red);}
+.p-lbl.a{color:var(--amber);}
+.p-lbl.c{color:var(--cyan);}
+.p-desc{font-size:11px;color:var(--m);line-height:1.5;margin-left:18px;}
+
+/* Score row (v4.3) */
+.p-score-row{display:flex;align-items:center;gap:9px;margin-top:9px;}
+.p-score-track{flex:1;height:3px;background:rgba(255,255,255,0.06);border-radius:99px;overflow:hidden;}
+.p-score-fill{height:100%;border-radius:99px;transition:width .8s;}
+.p-score-fill.g{background:var(--green);width:12%;}
+.p-score-fill.r{background:linear-gradient(90deg,var(--amber),var(--red));width:85%;}
+.p-score-fill.a{background:var(--amber);width:35%;}
+.p-sc{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--m);white-space:nowrap;}
+
+.p-url{margin:0 10px 7px;background:var(--s2);border:1px solid var(--b);border-radius:7px;
+  padding:7px 11px;display:flex;align-items:center;gap:8px;}
+.pu-l{font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:1.5px;color:var(--muted);white-space:nowrap;}
+.pu-v{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text);
+  flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;opacity:.7;}
+
+.p-stats{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin:0 10px 7px;}
+.psi{background:var(--s2);border:1px solid var(--b);border-radius:7px;padding:9px 11px;position:relative;overflow:hidden;}
+.psi:first-child::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;border-radius:0 0 7px 7px;background:var(--green);opacity:.5;}
+.psi:last-child::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;border-radius:0 0 7px 7px;background:var(--red);opacity:.5;}
+.psi .sl{font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:1.5px;color:var(--m);text-transform:uppercase;margin-bottom:2px;}
+.psi .sv{font-family:'Barlow Condensed',sans-serif;font-size:26px;font-weight:800;}
+.sv.g{color:var(--green);}
+.sv.r{color:var(--red);}
+
+/* Dashboard button (v4.3) */
+.p-dash-btn{
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  margin:0 10px 7px;padding:10px 16px;
+  background:rgba(0,200,240,0.06);border:1px solid rgba(0,200,240,0.2);
+  border-radius:9px;cursor:default;
+  font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:700;letter-spacing:1px;
+  color:var(--cyan);text-transform:uppercase;
+}
+
+.p-footer{padding:7px 11px 11px;display:flex;align-items:center;justify-content:space-between;}
+.p-brand{font-family:'JetBrains Mono',monospace;font-size:8px;color:var(--muted);letter-spacing:1px;}
+.p-srv{display:flex;align-items:center;gap:4px;font-family:'JetBrains Mono',monospace;font-size:8px;color:var(--m);}
+.srv-dot{width:5px;height:5px;border-radius:50%;background:var(--green);box-shadow:0 0 5px var(--green);}
+
+/* ══ BLOCKED PAGE MOCKUP (v4.3) ══ */
+.blocked-full{
+  border-radius:12px;overflow:hidden;
+  border:1px solid rgba(255,21,48,0.18);
+  box-shadow:0 30px 80px rgba(255,21,48,0.07),0 40px 80px rgba(0,0,0,0.7);
+  background:#050810;
+  position:relative;max-width:580px;margin:0 auto;
+}
+.bf-grid-bg{position:absolute;inset:0;pointer-events:none;
+  background-image:linear-gradient(rgba(255,21,48,0.02) 1px,transparent 1px),
+  linear-gradient(90deg,rgba(255,21,48,0.02) 1px,transparent 1px);
+  background-size:30px 30px;}
+.bf-scan{position:absolute;inset:0;pointer-events:none;
+  background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.1) 2px,rgba(0,0,0,0.1) 4px);}
+.bf-glow{position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(ellipse 60% 50% at 50% 50%,rgba(255,21,48,0.06),transparent 70%);}
+.bf-inner{position:relative;z-index:2;padding:0 24px 24px;}
+
+.bf-topbar{display:flex;align-items:center;justify-content:space-between;
+  padding:10px 0;margin-bottom:16px;
+  border-bottom:1px solid rgba(255,21,48,0.12);
+  font-family:'JetBrains Mono',monospace;font-size:9px;color:#ff2d55;letter-spacing:1.5px;}
+.bf-dots{display:flex;gap:5px;}
+.bd{width:8px;height:8px;border-radius:50%;}
+.bd.r{background:#ff2d55;box-shadow:0 0 5px #ff2d55;}
+.bd.y{background:var(--amber);}
+.bd.g{background:#30d158;}
+
+/* Ring timer (v4.3 new element) */
+.bf-ring-area{display:flex;justify-content:center;margin-bottom:16px;}
+.bf-ring-wrap{position:relative;width:80px;height:80px;}
+.bf-ring-svg{width:80px;height:80px;}
+.bf-ring-circle-bg{fill:none;stroke:rgba(255,255,255,0.06);stroke-width:6;}
+.bf-ring-fill{fill:none;stroke:#ff1530;stroke-width:6;stroke-linecap:round;
+  stroke-dasharray:220;stroke-dashoffset:55;
+  transform-origin:center;transform:rotate(-90deg);}
+.bf-ring-num{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  font-family:'Barlow Condensed',sans-serif;font-size:28px;font-weight:800;color:#ff1530;line-height:1;}
+.bf-phase-lbl{text-align:center;font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:1px;
+  color:var(--m);margin-top:4px;}
+
+.bf-header-row{display:flex;align-items:center;gap:14px;margin-bottom:14px;}
+.bf-title-block .badge-sm{
+  display:inline-flex;align-items:center;gap:5px;
+  background:rgba(255,21,48,0.1);border:1px solid rgba(255,21,48,0.28);
+  border-radius:4px;padding:3px 9px;
+  font-family:'JetBrains Mono',monospace;font-size:9px;color:#ff2d55;letter-spacing:1.5px;margin-bottom:6px;}
+.badge-blink{width:5px;height:5px;border-radius:50%;background:#ff2d55;animation:bbl 1s step-end infinite;}
+@keyframes bbl{0%,100%{opacity:1;}50%{opacity:0;}}
+.bf-h1{font-family:'Barlow Condensed',sans-serif;font-size:24px;font-weight:700;color:#fff;line-height:1.2;}
+.bf-h1 span{color:#ff2d55;}
+
+.bf-domain{display:flex;align-items:center;gap:10px;
+  background:rgba(255,21,48,0.04);border:1px solid rgba(255,21,48,0.15);
+  border-radius:7px;padding:10px 13px;margin-bottom:12px;}
+.bf-dl{font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:2px;color:var(--m);white-space:nowrap;}
+.bf-dv{font-family:'JetBrains Mono',monospace;font-size:12px;color:#ff2d55;
+  flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+
+.bf-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:12px;}
+.bg-item{background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.05);
+  border-radius:6px;padding:9px 12px;}
+.bg-label{font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:1.5px;color:var(--m);text-transform:uppercase;margin-bottom:3px;}
+.bg-val{font-family:'JetBrains Mono',monospace;font-size:12px;}
+.bg-val.r{color:#ff2d55;}
+.bg-val.a{color:var(--amber);}
+
+/* Verify badge (v4.3 double verification result) */
+.bf-verify-badge{display:flex;align-items:center;gap:8px;
+  background:rgba(255,21,48,0.07);border:1px solid rgba(255,21,48,0.22);
+  border-radius:6px;padding:9px 12px;margin-bottom:12px;
+  font-family:'JetBrains Mono',monospace;font-size:10px;color:#ff2d55;}
+.vb-icon{font-size:14px;flex-shrink:0;}
+
+.bf-score-bar{margin-bottom:14px;}
+.bf-sb-h{display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace;
+  font-size:9px;color:var(--m);margin-bottom:5px;letter-spacing:1px;}
+.bf-sb-track{height:4px;background:rgba(255,255,255,0.05);border-radius:99px;overflow:hidden;}
+.bf-sb-fill{height:100%;background:linear-gradient(90deg,var(--amber),#ff2d55);border-radius:99px;width:75%;}
+
+.bf-btns{display:flex;flex-direction:column;gap:7px;}
+.bf-btns-top{display:flex;gap:8px;}
+.bf-btn-safe{
+  flex:1;padding:11px;border-radius:8px;
+  background:var(--green);color:#000;
+  font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:700;
+  border:none;cursor:default;text-align:center;}
+.bf-btn-cont{
+  flex:1;padding:11px;border-radius:8px;
+  background:transparent;color:var(--amber);
+  font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:600;
+  border:1px solid rgba(245,158,11,0.3);cursor:default;text-align:center;}
+.bf-btn-cont.disabled{opacity:.5;color:var(--m);border-color:var(--b);}
+.bf-confirm{
+  background:rgba(245,158,11,0.06);border:1px solid rgba(245,158,11,0.18);
+  border-radius:8px;padding:12px;
+}
+.bf-ct{font-size:11px;color:var(--amber);line-height:1.5;margin-bottom:10px;font-family:'DM Sans',sans-serif;}
+.bf-cb{display:flex;gap:7px;}
+.bf-cy{flex:1;padding:8px;border-radius:6px;background:rgba(245,158,11,0.1);color:var(--amber);
+  font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;
+  border:1px solid rgba(245,158,11,0.28);cursor:default;text-align:center;}
+.bf-cn{flex:1;padding:8px;border-radius:6px;background:transparent;color:var(--m);
+  font-family:'Barlow Condensed',sans-serif;font-size:14px;
+  border:1px solid var(--b);cursor:default;text-align:center;}
+.bf-foot{margin-top:12px;text-align:center;font-family:'JetBrains Mono',monospace;
+  font-size:9px;color:var(--muted);letter-spacing:1px;}
+
+/* ══ DASHBOARD MOCKUP (v4.3) ══ */
+.dash-frame{
+  border-radius:12px;overflow:hidden;border:1px solid var(--b);
+  box-shadow:0 30px 80px rgba(0,0,0,0.7);
+  background:var(--s1);
+}
+.d-topbar{background:#060b14;border-bottom:1px solid var(--b);
+  padding:12px 18px;display:flex;align-items:center;justify-content:space-between;}
+.d-logo-row{display:flex;align-items:center;gap:9px;}
+.d-logo-t{font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:800;color:#fff;}
+.d-logo-t span{color:var(--cyan);}
+
+/* Nav tabs (v4.3 — click-based with active state) */
+.d-nav-links{display:flex;gap:14px;}
+.d-nav-lnk{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:2px;color:var(--m);cursor:pointer;}
+.d-nav-lnk.a{color:var(--cyan);border-bottom:1px solid var(--cyan);padding-bottom:1px;}
+
+.d-live{display:flex;align-items:center;gap:5px;background:rgba(0,217,126,0.07);
+  border:1px solid rgba(0,217,126,0.18);border-radius:99px;padding:3px 10px;
+  font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--green);}
+.dl-dot{width:5px;height:5px;border-radius:50%;background:var(--green);
+  box-shadow:0 0 6px var(--green);animation:dlp 1.5s ease-in-out infinite;}
+@keyframes dlp{0%,100%{opacity:1;}50%{opacity:.3;}}
+
+.d-body{padding:18px;}
+
+/* Stat cards (v4.3 — left accent bar) */
+.d-stats{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:14px;}
+.d-stat{background:var(--s2);border:1px solid var(--b);border-radius:8px;
+  padding:14px 14px;position:relative;overflow:hidden;}
+.d-stat::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;border-radius:3px 0 0 3px;}
+.d-stat.c1::before{background:var(--cyan);}
+.d-stat.c2::before{background:var(--green);}
+.d-stat.c3::before{background:var(--red);}
+.d-stat.c4::before{background:var(--amber);}
+.d-stat.c5::before{background:var(--blue);}
+.d-sl{font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:2px;color:var(--m);text-transform:uppercase;margin-bottom:6px;}
+.d-sv{font-family:'Barlow Condensed',sans-serif;font-size:26px;font-weight:800;line-height:1;margin-bottom:3px;}
+.d-sv.c1{color:var(--cyan);}
+.d-sv.c2{color:var(--green);}
+.d-sv.c3{color:var(--red);}
+.d-sv.c4{color:var(--amber);}
+.d-sv.c5{color:var(--blue);}
+.d-ssub{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--muted);}
+
+/* Mid row */
+.d-mid{display:grid;grid-template-columns:220px 1fr;gap:10px;margin-bottom:14px;}
+.d-gauge-card,.d-chart-card{background:var(--s2);border:1px solid var(--b);border-radius:8px;padding:14px 16px;}
+
+.d-card-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;}
+.d-card-title{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;color:#fff;letter-spacing:1px;text-transform:uppercase;}
+.d-badge{font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:1px;padding:2px 7px;border-radius:4px;
+  background:rgba(0,200,240,0.07);color:var(--cyan);border:1px solid rgba(0,200,240,0.18);}
+
+/* Gauge arc */
+.gauge-svg-wrap{display:flex;justify-content:center;margin-bottom:10px;position:relative;}
+.gauge-num-center{position:absolute;bottom:2px;left:50%;transform:translateX(-50%);text-align:center;}
+.gauge-big{font-family:'Barlow Condensed',sans-serif;font-size:26px;font-weight:800;color:var(--green);}
+.gauge-unit{font-family:'JetBrains Mono',monospace;font-size:8px;color:var(--m);letter-spacing:1px;}
+.gauge-lbrow{display:flex;justify-content:space-between;
+  font-family:'JetBrains Mono',monospace;font-size:8px;color:var(--muted);margin-bottom:10px;}
+.tl-center{text-align:center;}
+.tl-sub{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:1.5px;color:var(--m);}
+.tl-badge{display:inline-block;margin-top:4px;font-family:'Barlow Condensed',sans-serif;
+  font-size:14px;font-weight:700;letter-spacing:2px;padding:3px 12px;border-radius:5px;
+  background:rgba(0,217,126,0.1);color:var(--green);border:1px solid rgba(0,217,126,0.2);}
+
+/* Mini bar chart */
+.mini-bars{display:flex;align-items:flex-end;gap:3px;height:90px;padding-top:8px;}
+.mb{border-radius:2px 2px 0 0;min-width:8px;flex:1;}
+
+/* Clock display (v4.3) */
+.d-clock{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--m);}
+
+/* Bottom row */
+.d-bot{display:grid;grid-template-columns:1fr 240px;gap:10px;}
+.d-log-card,.d-bl-card{background:var(--s2);border:1px solid var(--b);border-radius:8px;padding:14px 16px;}
+.d-table{width:100%;border-collapse:collapse;margin-top:10px;}
+.d-table th{font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;
+  padding:0 6px 7px;text-align:left;border-bottom:1px solid rgba(255,255,255,0.04);}
+.d-table td{padding:6px 6px;font-size:10px;border-bottom:1px solid rgba(255,255,255,0.02);}
+.td-d{color:var(--text);max-width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.td-t{font-family:'JetBrains Mono',monospace;color:var(--muted);font-size:9px;white-space:nowrap;}
+.td-r{font-family:'JetBrains Mono',monospace;color:var(--muted);font-size:9px;max-width:100px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.pill{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:.5px;padding:2px 6px;border-radius:3px;font-weight:700;}
+.ps{background:rgba(0,217,126,0.1);color:var(--green);}
+.pb{background:rgba(255,21,48,0.1);color:var(--red);}
+.pw{background:rgba(0,200,240,0.1);color:var(--cyan);}
+.ph{background:rgba(245,158,11,0.1);color:var(--amber);}
+.bl-item{display:flex;align-items:center;gap:8px;padding:7px 8px;border-radius:5px;
+  border:1px solid rgba(255,21,48,0.1);background:rgba(255,21,48,0.04);margin-bottom:5px;}
+.bl-icon{color:var(--red);font-size:11px;}
+.bl-dom{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text);
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;}
+
+/* ══ FEATURES SECTION ══ */
+.features-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px;}
+.feat-card{
+  background:var(--s2);border:1px solid var(--b);border-radius:10px;
+  padding:20px;transition:border-color .2s,transform .2s;
+}
+.feat-card:hover{border-color:rgba(0,200,240,0.2);transform:translateY(-2px);}
+.feat-icon{font-size:22px;margin-bottom:10px;}
+.feat-title{font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:700;color:#fff;margin-bottom:6px;letter-spacing:.3px;}
+.feat-desc{font-size:12px;color:var(--m);line-height:1.6;}
+.feat-tag{display:inline-block;margin-top:10px;font-family:'JetBrains Mono',monospace;
+  font-size:9px;letter-spacing:1px;padding:2px 8px;border-radius:4px;}
+.tag-new{background:rgba(0,200,240,0.07);color:var(--cyan);border:1px solid rgba(0,200,240,0.18);}
+.tag-fix{background:rgba(0,217,126,0.07);color:var(--green);border:1px solid rgba(0,217,126,0.18);}
+
+/* ══ FOOTER ══ */
+footer{
+  text-align:center;padding:32px 36px;
+  border-top:1px solid var(--b);
+  font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:1.5px;
+}
+.footer-brand{
+  font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:800;
+  color:#fff;letter-spacing:2px;display:inline;
+}
+.footer-brand span{color:var(--cyan);}
+.footer-author{
+  display:inline-block;
+  color:var(--cyan);
+  background:rgba(0,200,240,0.07);
+  border:1px solid rgba(0,200,240,0.22);
+  border-radius:4px;padding:2px 10px;
+  font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:1.5px;
+  margin-left:8px;
+}
+.footer-copy{
+  display:block;margin-top:7px;
+  font-size:9px;color:var(--muted);letter-spacing:1px;
+}
+
+/* Entry animation */
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
+.popup-frame,.blocked-full,.dash-frame,.feat-card{animation:fadeUp .5s ease forwards;}
+
+@media(max-width:900px){
+  .d-stats{grid-template-columns:repeat(3,1fr);}
+  .d-mid{grid-template-columns:1fr;}
+  .d-bot{grid-template-columns:1fr;}
+  .popups-row{justify-content:center;}
+}
+@media(max-width:600px){
+  .section{padding:48px 16px;}
+  nav{padding:12px 16px;}
+  .nav-links{display:none;}
+  h1{letter-spacing:-.5px;}
+  .d-stats{grid-template-columns:1fr 1fr;}
+}
+</style>
+</head>
+<body>
+<div class="scan"></div>
+<div class="page">
+
+<nav>
+  <div class="logo">
+    <svg width="30" height="30" viewBox="0 0 34 34" fill="none">
+      <path d="M17 2L5 8V17C5 24 10 29 17 32C24 29 29 24 29 17V8L17 2Z"
+            fill="rgba(0,200,240,0.07)" stroke="#00c8f0" stroke-width="1.4"/>
+      <path d="M17 8L9 12V17C9 22 12.5 26 17 28C21.5 26 25 22 25 17V12L17 8Z"
+            fill="rgba(0,200,240,0.04)" stroke="rgba(0,200,240,0.3)" stroke-width="0.9"/>
+      <path d="M12 17L15 20L22 13" stroke="#00c8f0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    <span class="logo-txt">Smart<span>Shield</span></span>
+  </div>
+  <div class="nav-links">
+    <span class="nav-link active">OVERVIEW</span>
+    <span class="nav-link">FEATURES</span>
+    <span class="nav-link">HOW IT WORKS</span>
+    <span class="nav-link">PREVIEW</span>
+    <span class="nav-link">DOWNLOAD</span>
+  </div>
+  <a href="https://t.me/smartshieldai" target="_blank" class="nav-cta" style="background:rgba(0,136,204,0.15);color:#29b6f6;border:1px solid rgba(41,182,246,0.3);">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" style="display:inline;vertical-align:middle;margin-right:5px;"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.248-1.97 9.289c-.145.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12L7.48 14.697l-2.95-.924c-.642-.204-.654-.642.136-.953l11.52-4.44c.537-.194 1.006.131.376.868z"/></svg>
+    TELEGRAM SUPPORT
+  </a>
+  <a href="SmartShield_Engine.exe" class="nav-cta">GET SMARTSHIELD</a>
+</nav>
+
+<div class="hero" id="overview">
+  <div class="hero-eyebrow"><div class="e-dot"></div>SMARTSHIELD AI · v4.3 FINAL · CHROME EXTENSION</div>
+  <h1>Stop <span>Phishing</span> Attacks<br><span class="dim">Before They Load</span></h1>
+  <p class="hero-sub">A <strong>C++ heuristic engine</strong> + Chrome Extension that silently analyzes every URL in real-time — blocking threats before the page even renders.</p>
+  <div class="hero-ctas">
+    <a href="SmartShield_Engine.exe" class="btn-primary">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 2L3 7v7c0 5.25 3.75 10.15 9 11.25C17.25 24.15 21 19.25 21 14V7L12 2z" fill="rgba(0,0,0,0.2)" stroke="currentColor" stroke-width="2"/><path d="M8 12l3 3 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Download Engine (.EXE)
+    </a>
+    <a href="SmartShield_Ext.zip" class="btn-secondary">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="7" height="7" rx="1" stroke="currentColor" stroke-width="2"/><rect x="14" y="3" width="7" height="7" rx="1" stroke="currentColor" stroke-width="2"/><rect x="3" y="14" width="7" height="7" rx="1" stroke="currentColor" stroke-width="2"/><rect x="14" y="14" width="7" height="7" rx="1" stroke="currentColor" stroke-width="2"/></svg>
+      Get Extension (.ZIP)
+    </a>
+  </div>
+  <div class="tag-row">
+    <span class="tag">C++ WinSock2 Engine</span>
+    <span class="tag">Multi-threaded</span>
+    <span class="tag">9-Point AI Scoring</span>
+    <span class="tag">HTTP Detection</span>
+    <span class="tag">Persistent Blacklist</span>
+    <span class="tag">35+ Whitelisted Domains</span>
+    <span class="tag">Live Dashboard</span>
+    <span class="tag">Chrome MV3</span>
+  </div>
+</div>
+
+<!-- ══ STATS BAR ══ -->
+<div class="stats-bar">
+  <div class="stat-item">
+    <div class="stat-num c">1,247</div>
+    <div class="stat-lbl">URLs ANALYZED</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-num g">1,209</div>
+    <div class="stat-lbl">SAFE VISITS</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-num r">24</div>
+    <div class="stat-lbl">THREATS BLOCKED</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-num a">9</div>
+    <div class="stat-lbl">HEURISTIC CHECKS</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-num g">0ms</div>
+    <div class="stat-lbl">FALSE POSITIVES</div>
+  </div>
+</div>
+
+<!-- ══ HOW IT WORKS ══ -->
+<div class="section" id="how-it-works" style="background:rgba(0,200,240,0.01);">
+  <div class="sec-eyebrow">Zero Configuration</div>
+  <div class="sec-title">How SmartShield Works</div>
+  <p class="sec-desc">Three layers of protection that activate the moment you navigate to any URL — completely silent in the background.</p>
+  <div class="hiw-grid">
+    <div class="hiw-card">
+      <div class="hiw-num">01</div>
+      <div class="hiw-icon">🔗</div>
+      <div class="hiw-title">URL Intercepted</div>
+      <div class="hiw-desc">The Chrome Extension hooks into the browser's navigation event. Every tab change fires a request to the local C++ engine before the page loads — with zero delay to the user.</div>
+      <span class="hiw-badge c">CHROME MV3 API</span>
+    </div>
+    <div class="hiw-card">
+      <div class="hiw-num">02</div>
+      <div class="hiw-icon">🧠</div>
+      <div class="hiw-title">AI Scoring Engine</div>
+      <div class="hiw-desc">The C++ server runs 9 heuristic checks in parallel: brand spoofing, suspicious TLD, phishing patterns, domain length, hyphens, subdomains, numeric obfuscation, HTTP detection, and blacklist lookup.</div>
+      <span class="hiw-badge g">9-POINT ANALYSIS</span>
+    </div>
+    <div class="hiw-card">
+      <div class="hiw-num">03</div>
+      <div class="hiw-icon">🛡️</div>
+      <div class="hiw-title">Block or Allow</div>
+      <div class="hiw-desc">Score below threshold? Browser continues seamlessly. Score above? Tab is redirected to the blocked page instantly. A second deep scan runs in parallel to confirm — eliminating false positives.</div>
+      <span class="hiw-badge a">DOUBLE VERIFICATION</span>
+    </div>
+  </div>
+</div>
+
+<!-- ══ FEATURES LANDING ══ -->
+<div class="section" id="features-lp">
+  <div class="sec-eyebrow">Built Different</div>
+  <div class="sec-title">Everything SmartShield Provides</div>
+  <p class="sec-desc">From C++ engine to Chrome Extension — a complete security ecosystem with no third-party dependencies.</p>
+  <div class="lp-features">
+    <div class="lp-feat">
+      <div class="lp-feat-icon">🧠</div>
+      <div class="lp-feat-title">9-Point Heuristic Engine</div>
+      <div class="lp-feat-desc">Brand spoofing, suspicious TLD, phishing patterns, domain length, hyphens, subdomains, numeric obfuscation — all scored instantly on the C++ server.</div>
+      <span class="lp-feat-tag tag-new">CORE ENGINE</span>
+    </div>
+    <div class="lp-feat">
+      <div class="lp-feat-icon">🔒</div>
+      <div class="lp-feat-title">Double Verification</div>
+      <div class="lp-feat-desc">Blocked page fires a second server check in parallel with a 10s countdown. Bypass only unlocks after both complete — false positives can lower the risk level.</div>
+      <span class="lp-feat-tag tag-new">NEW v4.3</span>
+    </div>
+    <div class="lp-feat">
+      <div class="lp-feat-icon">🛡️</div>
+      <div class="lp-feat-title">Trusted Whitelist</div>
+      <div class="lp-feat-desc">35+ major domains (Google, Facebook, Amazon, etc.) permanently skip scoring. Zero false positives on legit sites. Fully customizable via /unblock endpoint.</div>
+      <span class="lp-feat-tag tag-fix">ZERO FALSE POSITIVES</span>
+    </div>
+    <div class="lp-feat">
+      <div class="lp-feat-icon">📊</div>
+      <div class="lp-feat-title">Live Dashboard</div>
+      <div class="lp-feat-desc">Auto-refreshes every 2 seconds. Stat cards, threat gauge, activity timeline bar chart, live event log table, blacklist panel. Offline overlay if server is down.</div>
+      <span class="lp-feat-tag tag-new">UPDATED v4.3</span>
+    </div>
+    <div class="lp-feat">
+      <div class="lp-feat-icon">⚡</div>
+      <div class="lp-feat-title">Multi-threaded C++ Server</div>
+      <div class="lp-feat-desc">Each request spawns its own thread via _beginthreadex with CRITICAL_SECTION mutex. No blocking. Handles concurrent extension + dashboard polling simultaneously.</div>
+      <span class="lp-feat-tag tag-fix">PERFORMANCE</span>
+    </div>
+    <div class="lp-feat">
+      <div class="lp-feat-icon">💾</div>
+      <div class="lp-feat-title">Persistent Blacklist</div>
+      <div class="lp-feat-desc">blacklist.txt loaded at startup, appended on every new block. Server restarts retain all previously blocked domains. User whitelist also persists.</div>
+      <span class="lp-feat-tag tag-fix">PERSISTENT STORAGE</span>
+    </div>
+    <div class="lp-feat">
+      <div class="lp-feat-icon">↩️</div>
+      <div class="lp-feat-title">Bypass + Persist</div>
+      <div class="lp-feat-desc">User can override after the 10s countdown + deep scan. Bypassed domain is saved to chrome.storage.local so future navigations skip the block check automatically.</div>
+      <span class="lp-feat-tag tag-new">NEW v4.3</span>
+    </div>
+    <div class="lp-feat">
+      <div class="lp-feat-icon">🔗</div>
+      <div class="lp-feat-title">5 REST API Endpoints</div>
+      <div class="lp-feat-desc">/?url= checking, /stats live numbers, /logs recent events, /blacklist blocked domains, /unblock?domain= for user override training. Full local REST API.</div>
+      <span class="lp-feat-tag tag-new">FULL API</span>
+    </div>
+    <div class="lp-feat">
+      <div class="lp-feat-icon">🧩</div>
+      <div class="lp-feat-title">Chrome MV3 Compliant</div>
+      <div class="lp-feat-desc">Built to the latest Manifest V3 standard with background service worker. No deprecated APIs. Compatible with Chrome 112+ and all Chromium-based browsers.</div>
+      <span class="lp-feat-tag tag-fix">MV3 STANDARD</span>
+    </div>
+  </div>
+</div>
+
+<!-- ══ PREVIEW SECTION HEADER ══ -->
+<div class="section" id="preview" style="padding-bottom:16px;">
+  <div class="sec-eyebrow">Live Mockups</div>
+  <div class="sec-title">See SmartShield in Action</div>
+  <p class="sec-desc">Pixel-perfect mockups of every interface — Extension Popup, Blocked Page, and Live Dashboard — exactly as they appear during real browsing.</p>
+  <div class="preview-banner">
+    <div class="pb-left">
+      <div class="pb-title">Three Complete Interfaces</div>
+      <div class="pb-sub">Scroll down to preview each component of the SmartShield ecosystem</div>
+    </div>
+    <div class="pb-tags">
+      <span class="pb-tag">EXTENSION POPUP</span>
+      <span class="pb-tag">BLOCKED PAGE</span>
+      <span class="pb-tag">LIVE DASHBOARD</span>
+    </div>
+  </div>
+</div>
+
+<!-- ══ DOWNLOAD ══ -->
+<div class="section" id="download" style="background:rgba(0,200,240,0.015);">
+  <div class="sec-eyebrow">Deployment Center</div>
+  <div class="sec-title">Installation & Setup</div>
+  <p class="sec-desc">Deploy the SmartShield ecosystem. The engine must be running for the extension to communicate and perform heuristic analysis.</p>
+
+  <div style="display:flex;gap:20px;flex-wrap:wrap;">
+    <div class="feat-card" style="flex:1;min-width:300px;border-color:rgba(0,200,240,0.3);">
+      <div class="feat-icon">⚙️</div>
+      <div class="feat-title">1. SmartShield Engine</div>
+      <p class="feat-desc">Compiled C++ WinSock2 backend. Listens for incoming URL verification requests from the browser extension. Auto-starts with Windows.</p>
+      <a href="SmartShield_Engine.exe" style="display:inline-block;margin-top:15px;padding:10px 24px;background:var(--cyan);color:#000;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:15px;border-radius:6px;text-decoration:none;letter-spacing:.5px;">DOWNLOAD ENGINE (.EXE)</a>
+      <div style="margin-top:12px;font-family:'JetBrains Mono';font-size:9px;color:var(--m);">SHA-256: 8F3E...B412</div>
+    </div>
+    <div class="feat-card" style="flex:1;min-width:300px;border-color:rgba(0,217,126,0.3);">
+      <div class="feat-icon">🧩</div>
+      <div class="feat-title">2. Browser Extension</div>
+      <p class="feat-desc">Chrome MV3 extension. Intercepts tab navigation events and syncs with the local C++ heuristic engine via localhost:8080.</p>
+      <a href="SmartShield_Ext.zip" style="display:inline-block;margin-top:15px;padding:10px 24px;background:var(--green);color:#000;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:15px;border-radius:6px;text-decoration:none;letter-spacing:.5px;">DOWNLOAD EXTENSION (.ZIP)</a>
+      <div style="margin-top:12px;font-family:'JetBrains Mono';font-size:9px;color:var(--m);">Version: 4.3 Stable</div>
+    </div>
+  </div>
+
+  <div style="margin-top:30px;padding:20px;background:var(--s1);border:1px dashed var(--b);border-radius:8px;">
+    <p style="font-family:'Barlow Condensed';color:#fff;font-size:16px;margin-bottom:10px;letter-spacing:.3px;">🛠️ SETUP INSTRUCTIONS</p>
+    <div style="font-size:11px;color:var(--m);line-height:1.9;font-family:'DM Sans',sans-serif;">
+      1. Run <span style="color:var(--cyan);font-family:'JetBrains Mono',monospace;">SmartShield_Engine.exe</span> — server starts on localhost:8080 and auto-hides.<br>
+      2. Extract <span style="color:var(--green);font-family:'JetBrains Mono',monospace;">SmartShield_Ext.zip</span>, go to Chrome → Extensions → enable Developer Mode → Load Unpacked.<br>
+      3. The Shield icon will turn cyan with a green ring when the engine is connected.
+    </div>
+  </div>
+</div>
+
+<!-- ══ POPUP ══ -->
+<div class="section" id="popup">
+  <div class="sec-eyebrow">Chrome Extension</div>
+  <div class="sec-title">Extension Popup — 3 States</div>
+  <p class="sec-desc">Displays real-time threat status for the current tab. The shield ring changes state (green/red/amber) and a score bar indicates risk level. Open Dashboard button links to the live monitoring page.</p>
+
+  <div class="popups-row">
+
+    <!-- ① SAFE -->
+    <div class="popup-wrap">
+      <div class="popup-label">① SAFE — Trusted Site</div>
+      <div class="popup-frame">
+        <div class="p-head">
+          <div class="p-logo-row">
+            <div class="p-ring-wrap p-ring-safe">
+              <svg width="34" height="34" viewBox="0 0 34 34" fill="none">
+                <path d="M17 2L5 8V17C5 24 10 29 17 32C24 29 29 24 29 17V8L17 2Z"
+                      fill="rgba(0,200,240,0.07)" stroke="#00c8f0" stroke-width="1.4"/>
+                <path d="M12 17L15 20L22 13" stroke="#00c8f0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <svg class="p-ring-svg" viewBox="0 0 42 42">
+                <circle class="p-ring-circle" cx="21" cy="21" r="20"/>
+              </svg>
+            </div>
+            <span class="p-logo-t">Smart<span>Shield</span></span>
+          </div>
+          <span class="p-ver">v4.3</span>
+        </div>
+        <div class="p-card safe">
+          <div class="p-sh"><div class="pdot g"></div><div class="p-lbl g">Site is Safe</div></div>
+          <div class="p-desc">No threats detected. Browse with confidence.</div>
+          <div class="p-score-row"><div class="p-score-track"><div class="p-score-fill g"></div></div><span class="p-sc">Score: 1.6</span></div>
+        </div>
+        <div class="p-url">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          <span class="pu-l">URL</span><span class="pu-v">https://www.google.com/search?q=…</span>
+        </div>
+        <div class="p-stats">
+          <div class="psi"><div class="sl">Sites Safe</div><div class="sv g">47</div></div>
+          <div class="psi"><div class="sl">Threats Blocked</div><div class="sv r">2</div></div>
+        </div>
+        <div class="p-dash-btn">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="2"/><rect x="14" y="3" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="2"/><rect x="3" y="14" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="2"/><rect x="14" y="14" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="2"/></svg>
+          Open Dashboard
+        </div>
+        <div class="p-footer"><span class="p-brand">SmartShield AI</span>
+          <div class="p-srv"><div class="srv-dot"></div><span>ENGINE ONLINE</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ② DANGER -->
+    <div class="popup-wrap">
+      <div class="popup-label">② DANGER — Threat Detected</div>
+      <div class="popup-frame">
+        <div class="p-head">
+          <div class="p-logo-row">
+            <div class="p-ring-wrap p-ring-danger">
+              <svg width="34" height="34" viewBox="0 0 34 34" fill="none">
+                <path d="M17 2L5 8V17C5 24 10 29 17 32C24 29 29 24 29 17V8L17 2Z"
+                      fill="rgba(255,21,48,0.1)" stroke="#ff1530" stroke-width="1.4"/>
+                <line x1="12" y1="12" x2="22" y2="22" stroke="#ff1530" stroke-width="2" stroke-linecap="round"/>
+                <line x1="22" y1="12" x2="12" y2="22" stroke="#ff1530" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+              <svg class="p-ring-svg" viewBox="0 0 42 42">
+                <circle class="p-ring-circle" cx="21" cy="21" r="20"/>
+              </svg>
+            </div>
+            <span class="p-logo-t">Smart<span>Shield</span></span>
+          </div>
+          <span class="p-ver">v4.3</span>
+        </div>
+        <div class="p-card danger">
+          <div class="p-sh"><div class="pdot r"></div><div class="p-lbl r">THREAT DETECTED</div></div>
+          <div class="p-desc">Malicious domain flagged. Do not proceed.</div>
+          <div class="p-score-row"><div class="p-score-track"><div class="p-score-fill r"></div></div><span class="p-sc">Score: 13.2</span></div>
+        </div>
+        <div class="p-url">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          <span class="pu-l">URL</span><span class="pu-v" style="color:#ff1530">https://secure-paypal-verify.xyz/…</span>
+        </div>
+        <div class="p-stats">
+          <div class="psi"><div class="sl">Sites Safe</div><div class="sv g">47</div></div>
+          <div class="psi"><div class="sl">Threats Blocked</div><div class="sv r">3</div></div>
+        </div>
+        <div class="p-dash-btn">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="2"/><rect x="14" y="3" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="2"/><rect x="3" y="14" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="2"/><rect x="14" y="14" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="2"/></svg>
+          Open Dashboard
+        </div>
+        <div class="p-footer"><span class="p-brand">SmartShield AI</span>
+          <div class="p-srv"><div class="srv-dot"></div><span>ENGINE ONLINE</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ③ HTTP WARNING -->
+    <div class="popup-wrap">
+      <div class="popup-label">③ HTTP WARNING — No Encryption</div>
+      <div class="popup-frame">
+        <div class="p-head">
+          <div class="p-logo-row">
+            <div class="p-ring-wrap p-ring-warn">
+              <svg width="34" height="34" viewBox="0 0 34 34" fill="none">
+                <path d="M17 2L5 8V17C5 24 10 29 17 32C24 29 29 24 29 17V8L17 2Z"
+                      fill="rgba(245,158,11,0.07)" stroke="#f59e0b" stroke-width="1.4"/>
+                <text x="14" y="22" fill="#f59e0b" font-size="14" font-weight="bold">!</text>
+              </svg>
+              <svg class="p-ring-svg" viewBox="0 0 42 42">
+                <circle class="p-ring-circle" cx="21" cy="21" r="20"/>
+              </svg>
+            </div>
+            <span class="p-logo-t">Smart<span>Shield</span></span>
+          </div>
+          <span class="p-ver">v4.3</span>
+        </div>
+        <div class="p-card http">
+          <div class="p-sh"><div class="pdot a"></div><div class="p-lbl a">Insecure HTTP</div></div>
+          <div class="p-desc">No encryption. Data can be intercepted.</div>
+          <div class="p-score-row"><div class="p-score-track"><div class="p-score-fill a"></div></div><span class="p-sc">Score: 4.0</span></div>
+        </div>
+        <div class="p-url">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          <span class="pu-l">URL</span><span class="pu-v" style="color:var(--amber)">http://old-banking-site.com/…</span>
+        </div>
+        <div class="p-stats">
+          <div class="psi"><div class="sl">Sites Safe</div><div class="sv g">47</div></div>
+          <div class="psi"><div class="sl">Threats Blocked</div><div class="sv r">3</div></div>
+        </div>
+        <div class="p-dash-btn">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="2"/><rect x="14" y="3" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="2"/><rect x="3" y="14" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="2"/><rect x="14" y="14" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="2"/></svg>
+          Open Dashboard
+        </div>
+        <div class="p-footer"><span class="p-brand">SmartShield AI</span>
+          <div class="p-srv"><div class="srv-dot" style="background:var(--amber);box-shadow:none;"></div><span>ENGINE ONLINE</span></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══ BLOCKED PAGE ══ -->
+<div class="section" id="blocked" style="max-width:1280px;margin:0 auto;">
+  <div class="sec-eyebrow">Full-Page Interception</div>
+  <div class="sec-title">Blocked Page — Double Verification + Countdown</div>
+  <p class="sec-desc">When a threat is detected the tab is redirected here. A 10-second sandbox countdown runs while a second server check ("deep scan") fires in parallel. The bypass button only unlocks after both complete.</p>
+
+  <div class="blocked-full">
+    <div class="bf-grid-bg"></div>
+    <div class="bf-scan"></div>
+    <div class="bf-glow"></div>
+    <div class="bf-inner">
+      <div class="bf-topbar">
+        <div class="bf-dots"><div class="bd r"></div><div class="bd y"></div><div class="bd g"></div></div>
+        <span>SMARTSHIELD v4.3 — THREAT INTERCEPTED</span>
+        <span id="bfTime">19:01:54</span>
+      </div>
+
+      <!-- Ring timer + phase label (v4.3 new) -->
+      <div class="bf-ring-area">
+        <div>
+          <div class="bf-ring-wrap">
+            <svg class="bf-ring-svg" viewBox="0 0 80 80">
+              <circle class="bf-ring-circle-bg" cx="40" cy="40" r="35"/>
+              <circle class="bf-ring-fill" cx="40" cy="40" r="35"/>
+            </svg>
+            <div class="bf-ring-num">✓</div>
+          </div>
+          <div class="bf-phase-lbl" style="color:#ff1530;">Threat Confirmed</div>
+        </div>
+      </div>
+
+      <div class="bf-header-row">
+        <svg width="54" height="54" viewBox="0 0 90 90" fill="none"
+             style="filter:drop-shadow(0 0 10px rgba(255,21,48,0.5));animation:shp 2s ease-in-out infinite;flex-shrink:0">
+          <style>@keyframes shp{0%,100%{filter:drop-shadow(0 0 8px rgba(255,21,48,0.5))}50%{filter:drop-shadow(0 0 22px rgba(255,21,48,0.85))}}</style>
+          <path d="M45 6L12 20V44C12 62 27 76 45 84C63 76 78 62 78 44V20L45 6Z" fill="rgba(255,21,48,0.1)" stroke="#ff1530" stroke-width="2"/>
+          <line x1="32" y1="32" x2="58" y2="58" stroke="#ff1530" stroke-width="4" stroke-linecap="round"/>
+          <line x1="58" y1="32" x2="32" y2="58" stroke="#ff1530" stroke-width="4" stroke-linecap="round"/>
+        </svg>
+        <div class="bf-title-block">
+          <div class="badge-sm"><div class="badge-blink"></div>THREAT DETECTED</div>
+          <div class="bf-h1">Access <span>Blocked</span><br>by SmartShield AI</div>
+        </div>
+      </div>
+
+      <div class="bf-domain">
+        <span class="bf-dl">FLAGGED DOMAIN</span>
+        <span class="bf-dv">secure-paypal-verify.xyz</span>
+      </div>
+
+      <div class="bf-grid">
+        <div class="bg-item"><div class="bg-label">Threat Score</div><div class="bg-val r">13.2 / 20</div></div>
+        <div class="bg-item"><div class="bg-label">Status</div><div class="bg-val r">BLOCKED</div></div>
+        <div class="bg-item"><div class="bg-label">Detection</div><div class="bg-val a">AI Heuristic</div></div>
+        <div class="bg-item"><div class="bg-label">Reason</div><div class="bg-val a" style="font-size:10px">BRAND_SPOOFING · BAD_TLD</div></div>
+      </div>
+
+      <!-- Double verification badge (v4.3 new) -->
+      <div class="bf-verify-badge">
+        <span class="vb-icon">🔒</span>
+        <span style="font-size:10px;">Double Verification Complete — Threat Confirmed</span>
+      </div>
+
+      <div class="bf-score-bar">
+        <div class="bf-sb-h"><span>RISK LEVEL</span><span style="color:#ff1530">CRITICAL</span></div>
+        <div class="bf-sb-track"><div class="bf-sb-fill"></div></div>
+      </div>
+
+      <div class="bf-btns">
+        <div class="bf-btns-top">
+          <div class="bf-btn-safe">← Return to Safety</div>
+          <div class="bf-btn-cont">⚠ Proceed at your own risk</div>
+        </div>
+        <div class="bf-confirm">
+          <div class="bf-ct">⚠ You are about to visit a site flagged as dangerous.<br>This may expose your data or device to harm. Are you sure?</div>
+          <div class="bf-cb">
+            <div class="bf-cy">Yes, proceed — I understand the risk</div>
+            <div class="bf-cn">Cancel</div>
+          </div>
+        </div>
+      </div>
+      <div class="bf-foot">SMARTSHIELD AI · DO NOT PROCEED · <span id="bfDate">06 Apr 2026</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ DASHBOARD ══ -->
+<div class="section" id="dashboard">
+  <div class="sec-eyebrow">Live Security Dashboard</div>
+  <div class="sec-title">dashboard.html — Open in Browser</div>
+  <p class="sec-desc">Polls the C++ server every 2 seconds. Shows live stats, threat gauge, activity timeline, event log, and blacklist. Nav tabs scroll to each section.</p>
+
+  <div class="dash-frame">
+    <div class="d-topbar">
+      <div class="d-logo-row">
+        <svg width="26" height="26" viewBox="0 0 34 34" fill="none">
+          <path d="M17 2L5 8V17C5 24 10 29 17 32C24 29 29 24 29 17V8L17 2Z" fill="rgba(0,200,240,0.07)" stroke="#00c8f0" stroke-width="1.4"/>
+          <path d="M12 17L15 20L22 13" stroke="#00c8f0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span class="d-logo-t">Smart<span>Shield</span></span>
+      </div>
+      <div class="d-nav-links">
+        <span class="d-nav-lnk a">DASHBOARD</span>
+        <span class="d-nav-lnk">THREAT LOG</span>
+        <span class="d-nav-lnk">BLACKLIST</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;">
+        <span class="d-clock" id="dashClock">19:02:31</span>
+        <div class="d-live"><div class="dl-dot"></div>ENGINE LIVE</div>
+      </div>
+    </div>
+
+    <div class="d-body">
+      <div class="d-stats">
+        <div class="d-stat c1"><div class="d-sl">Total Checked</div><div class="d-sv c1">1,247</div><div class="d-ssub">URLs analyzed</div></div>
+        <div class="d-stat c2"><div class="d-sl">Safe Visits</div><div class="d-sv c2">1,209</div><div class="d-ssub">No threats</div></div>
+        <div class="d-stat c3"><div class="d-sl">Threats Blocked</div><div class="d-sv c3">24</div><div class="d-ssub">Intercepted</div></div>
+        <div class="d-stat c4"><div class="d-sl">HTTP Warnings</div><div class="d-sv c4">14</div><div class="d-ssub">Insecure HTTP</div></div>
+        <div class="d-stat c5"><div class="d-sl">Blacklisted</div><div class="d-sv c5">19</div><div class="d-ssub">Persistent blocks</div></div>
+      </div>
+
+      <div class="d-mid">
+        <div class="d-gauge-card">
+          <div class="d-card-head"><span class="d-card-title">Threat Meter</span><span class="d-badge">LIVE</span></div>
+          <div class="gauge-svg-wrap">
+            <svg width="160" height="88" viewBox="0 0 160 88">
+              <path d="M 14 80 A 66 66 0 0 1 146 80" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="12" stroke-linecap="round"/>
+              <path d="M 14 80 A 66 66 0 0 1 54 28" fill="none" stroke="url(#gg)" stroke-width="12" stroke-linecap="round"/>
+              <defs><linearGradient id="gg" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="#00d97e"/>
+                <stop offset="50%" stop-color="#f59e0b"/>
+                <stop offset="100%" stop-color="#ff1530"/>
+              </linearGradient></defs>
+              <circle cx="54" cy="28" r="5" fill="white" opacity=".9"/>
+            </svg>
+            <div class="gauge-num-center">
+              <div class="gauge-big">19%</div>
+              <div class="gauge-unit">THREAT RATIO</div>
+            </div>
+          </div>
+          <div class="gauge-lbrow"><span>LOW</span><span>MED</span><span>HIGH</span></div>
+          <div class="tl-center">
+            <div class="tl-sub">CURRENT LEVEL</div>
+            <div class="tl-badge">LOW</div>
+          </div>
+        </div>
+
+        <div class="d-chart-card">
+          <div class="d-card-head"><span class="d-card-title">Activity Timeline</span><span class="d-badge">LAST 20 EVENTS</span></div>
+          <div class="mini-bars">
+            <div class="mb" style="height:30%;background:rgba(0,217,126,0.6)"></div>
+            <div class="mb" style="height:20%;background:rgba(0,217,126,0.6)"></div>
+            <div class="mb" style="height:40%;background:rgba(0,217,126,0.6)"></div>
+            <div class="mb" style="height:25%;background:rgba(0,217,126,0.6)"></div>
+            <div class="mb" style="height:15%;background:rgba(0,217,126,0.6)"></div>
+            <div class="mb" style="height:90%;background:rgba(255,21,48,0.8);box-shadow:0 0 8px #ff1530"></div>
+            <div class="mb" style="height:20%;background:rgba(0,200,240,0.5)"></div>
+            <div class="mb" style="height:35%;background:rgba(245,158,11,0.6)"></div>
+            <div class="mb" style="height:18%;background:rgba(0,217,126,0.6)"></div>
+            <div class="mb" style="height:28%;background:rgba(0,217,126,0.6)"></div>
+            <div class="mb" style="height:85%;background:rgba(255,21,48,0.8);box-shadow:0 0 8px #ff1530"></div>
+            <div class="mb" style="height:22%;background:rgba(0,217,126,0.6)"></div>
+            <div class="mb" style="height:12%;background:rgba(0,200,240,0.5)"></div>
+            <div class="mb" style="height:40%;background:rgba(245,158,11,0.6)"></div>
+            <div class="mb" style="height:30%;background:rgba(0,217,126,0.6)"></div>
+            <div class="mb" style="height:10%;background:rgba(0,217,126,0.6)"></div>
+            <div class="mb" style="height:60%;background:rgba(255,21,48,0.7)"></div>
+            <div class="mb" style="height:20%;background:rgba(0,217,126,0.6)"></div>
+            <div class="mb" style="height:15%;background:rgba(0,200,240,0.5)"></div>
+            <div class="mb" style="height:25%;background:rgba(0,217,126,0.6)"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="d-bot">
+        <div class="d-log-card">
+          <div class="d-card-head"><span class="d-card-title">Live Event Log</span><span class="d-badge">24 EVENTS</span></div>
+          <table class="d-table">
+            <thead><tr>
+              <th>Time</th><th>Domain</th><th>Status</th><th>Score</th><th>Reason</th>
+            </tr></thead>
+            <tbody>
+              <tr><td class="td-t">19:01:54</td><td class="td-d">secure-paypal-verify.xyz</td><td><span class="pill pb">BLOCKED</span></td><td style="color:#ff1530;font-family:'JetBrains Mono',monospace;font-size:10px">13.2</td><td class="td-r">BRAND_SPOOFING</td></tr>
+              <tr><td class="td-t">19:01:48</td><td class="td-d">www.facebook.com</td><td><span class="pill pw">TRUSTED</span></td><td style="color:var(--cyan);font-family:'JetBrains Mono',monospace;font-size:10px">0.0</td><td class="td-r">WHITELISTED</td></tr>
+              <tr><td class="td-t">19:01:34</td><td class="td-d">http://old-site.in/form</td><td><span class="pill ph">HTTP</span></td><td style="color:var(--amber);font-family:'JetBrains Mono',monospace;font-size:10px">4.0</td><td class="td-r">HTTP_NO_TLS</td></tr>
+              <tr><td class="td-t">19:00:58</td><td class="td-d">free-iphone-claim.tk</td><td><span class="pill pb">BLOCKED</span></td><td style="color:#ff1530;font-family:'JetBrains Mono',monospace;font-size:10px">18.5</td><td class="td-r">BAD_TLD · PHISH</td></tr>
+              <tr><td class="td-t">19:00:46</td><td class="td-d">github.com</td><td><span class="pill pw">TRUSTED</span></td><td style="color:var(--cyan);font-family:'JetBrains Mono',monospace;font-size:10px">0.0</td><td class="td-r">WHITELISTED</td></tr>
+              <tr><td class="td-t">19:00:21</td><td class="td-d">www.google.com</td><td><span class="pill pw">TRUSTED</span></td><td style="color:var(--cyan);font-family:'JetBrains Mono',monospace;font-size:10px">0.0</td><td class="td-r">WHITELISTED</td></tr>
+              <tr><td class="td-t">19:00:03</td><td class="td-d">some-random-blog.com</td><td><span class="pill ps">SAFE</span></td><td style="color:var(--green);font-family:'JetBrains Mono',monospace;font-size:10px">1.5</td><td class="td-r">OK</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="d-bl-card">
+          <div class="d-card-head"><span class="d-card-title">Blacklist</span><span class="d-badge">19</span></div>
+          <div style="margin-top:10px;">
+            <div class="bl-item"><span class="bl-icon">🚫</span><span class="bl-dom">secure-paypal-verify.xyz</span></div>
+            <div class="bl-item"><span class="bl-icon">🚫</span><span class="bl-dom">free-iphone-claim.tk</span></div>
+            <div class="bl-item"><span class="bl-icon">🚫</span><span class="bl-dom">login-verify-amazon.top</span></div>
+            <div class="bl-item"><span class="bl-icon">🚫</span><span class="bl-dom">microsoft-support-verify.xyz</span></div>
+            <div class="bl-item"><span class="bl-icon">🚫</span><span class="bl-dom">hdfc-bank-update.online</span></div>
+            <div class="bl-item"><span class="bl-icon">🚫</span><span class="bl-dom">192.168.1.105/phish</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- features section removed, now above -->
+
+<footer>
+  <div><span class="footer-brand">Smart<span>Shield</span> AI</span><span class="footer-author">PRIYANSH SINGH</span></div>
+  <div style="margin-top:10px;">
+    <a href="https://t.me/smartshieldai" target="_blank" style="display:inline-flex;align-items:center;gap:6px;color:#29b6f6;font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:1.5px;text-decoration:none;background:rgba(41,182,246,0.07);border:1px solid rgba(41,182,246,0.2);padding:4px 14px;border-radius:99px;">
+      <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.248-1.97 9.289c-.145.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12L7.48 14.697l-2.95-.924c-.642-.204-.654-.642.136-.953l11.52-4.44c.537-.194 1.006.131.376.868z"/></svg>
+      JOIN TELEGRAM FOR SUPPORT
+    </a>
+  </div>
+  <span class="footer-copy">© 2026 SMARTSHIELD AI SECURITY — ALL RIGHTS RESERVED</span>
+</footer>
+
+</div>
+<script>
+// Live clock — blocked page
+function tick(){
+  const t = new Date().toTimeString().slice(0,8);
+  const el = document.getElementById('bfTime');
+  if(el) el.textContent = t;
+  const dc = document.getElementById('dashClock');
+  if(dc) dc.textContent = t;
+  const bd = document.getElementById('bfDate');
+  if(bd){
+    const now = new Date();
+    bd.textContent = now.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'});
+  }
+}
+tick(); setInterval(tick,1000);
+
+// Smooth nav scroll
+const navMap = {
+  'OVERVIEW': '#overview',
+  'FEATURES': '#features-lp',
+  'HOW IT WORKS': '#how-it-works',
+  'PREVIEW': '#preview',
+  'DOWNLOAD': '#download'
+};
+document.querySelectorAll('.nav-link').forEach(l=>{
+  l.addEventListener('click',()=>{
+    document.querySelectorAll('.nav-link').forEach(x=>x.classList.remove('active'));
+    l.classList.add('active');
+    const target = navMap[l.textContent.trim()];
+    if(target){
+      const el = document.querySelector(target);
+      if(el) el.scrollIntoView({behavior:'smooth',block:'start'});
+    }
+  });
+});
+
+// Dashboard tab click (visual only — mirrors dashboard.js tab logic)
+document.querySelectorAll('.d-nav-lnk').forEach((tab,i)=>{
+  tab.addEventListener('click',()=>{
+    document.querySelectorAll('.d-nav-lnk').forEach(t=>t.classList.remove('a'));
+    tab.classList.add('a');
+  });
+});
+</script>
+</body>
+</html>
